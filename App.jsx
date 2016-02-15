@@ -18,9 +18,10 @@ App = React.createClass({
       // If hide completed is checked, filter tasks
       query = {checked: {$ne: true}};
     }
- 
+
     return {
-      tasks: Tasks.find(query, {sort: {createdAt: -1}}).fetch()
+      tasks: Tasks.find(query, {sort: {createdAt: -1}}).fetch(),
+      incompleteCount: Tasks.find({checked: {$ne: true}}).count()
     };
   },
 
@@ -54,7 +55,7 @@ App = React.createClass({
     return (
       <div className="container">
         <header>
-          <h1>Channel</h1>
+          <h1>Channels ({this.data.incompleteCount})</h1>
 
           <label className="hide-completed">
             <input
