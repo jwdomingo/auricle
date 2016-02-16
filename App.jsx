@@ -15,20 +15,22 @@ App = React.createClass({
     }
 
     return {
-      messages: Channels.find(query, {sort: {createdAt: -1}}).fetch(),
-      incompleteCount: Channels.find({checked: {$ne: true}}).count(),
+      messages: Messages.find(query, {sort: {createdAt: -1}}).fetch(),
+      messageCount: Messages.find({checked: {$ne: true}}).count(),
       currentUser: Meteor.user()
     };
   },
 
-  renderChannels() {
-    return this.data.tasks.map((task) => {
+  renderMessages() {
+    return this.data.messages.map((message) => {
+      console.log('this.data.currentUser',this.data.currentUser);
+      console.log('this.data.currentUser._id',this.data.currentUser._id);
       const currentUserId = this.data.currentUser && this.data.currentUser._id;
-      const showPrivateButton = task.owner === currentUserId;
+      const showPrivateButton = message.owner === currentUserId;
 
       return <Task
-        key={task._id}
-        task={task}
+        key={message._id}
+        task={message}
         showPrivateButton={showPrivateButton} />;
     });
   },
@@ -38,7 +40,7 @@ App = React.createClass({
 
     var text = ReactDOM.findDOMNode(this.refs.textInput).value.trim();
 
-    Meteor.call("addTask", text);
+    Meteor.call("addMessage", text);
 
     ReactDOM.findDOMNode(this.refs.textInput).value = "";
   },
@@ -53,7 +55,7 @@ App = React.createClass({
     return (
       <div className="container">
         <header>
-          <h1>Channels ({this.data.incompleteCount})</h1>
+          <h1>Messages ({this.data.messageCount})</h1>
 
           <label className="hide-completed">
             <input
@@ -67,17 +69,17 @@ App = React.createClass({
           <AccountsUIWrapper />
 
           { this.data.currentUser ?
-            <form className="new-task" onSubmit={this.handleSubmit} >
+            <form className="new-message" onSubmit={this.handleSubmit} >
               <input
                 type="text"
                 ref="textInput"
-                placeholder="Type to add new tasks" />
+                placeholder="Enter message" />
             </form> : ''
           }
         </header>
 
         <ul>
-          {this.renderChannels()}
+          {this.renderMessages()}
         </ul>
       </div>
     );
