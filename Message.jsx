@@ -21,11 +21,25 @@ Message = React.createClass({
       (this.props.message.private ? "private" : "");
 
     return (
-      <li className={msgClass}>
+      <li className={msgClass + ' collection-item avatar message-item'}>
+        <img src="assets/auricle.svg" alt="avatar" className="circle"></img>
+        <div className="row message-row">
+          <span className="title col s10">{this.props.message.username}</span>
+          <p className="col s10">{this.props.message.content}</p>
+        </div>
+
         { this.props.message.owner === Meteor.userId() ? (
-          <button className="right" onClick={this.deleteMessage}>
-          &times;
-          </button>
+          <span className="message-icons">
+            <a className="secondary-content" href="#">
+              <i className="tiny material-icons message-icons">edit</i>
+              <i onClick={this.deleteMessage} className="tiny material-icons message-icons">delete</i>
+              { this.props.showPrivateButton ? (
+                <i className="tiny material-icons message-icons" onClick={this.togglePrivate}>
+                  { this.props.message.private ? "lock" : "lock_open" }
+                </i>
+              ) : '' }
+            </a>
+          </span>
         ) : '' }
 
         { this.props.message.owner === Meteor.userId() ? (
@@ -36,16 +50,6 @@ Message = React.createClass({
             checked={this.props.message.checked}
             onClick={this.toggleChecked} />
           ) : '' }
-
-          { this.props.showPrivateButton ? (
-            <button className="right" onClick={this.togglePrivate}>
-              { this.props.message.private ? "Private" : "Public" }
-            </button>
-          ) : '' }
-
-          <span className="text">
-            <strong>{this.props.message.username}</strong>: {this.props.message.content}
-          </span>
       </li>
     )
   }
