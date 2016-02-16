@@ -35,7 +35,7 @@ App = React.createClass({
   handleSubmit(event) {
     event.preventDefault();
     // Find the text field via the React ref
-    var text = React.findDOMNode(this.refs.textInput).value.trim();
+    var text = ReactDOM.findDOMNode(this.refs.textInput).value.trim();
 
     Tasks.insert({
       text: text,
