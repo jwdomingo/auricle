@@ -9,30 +9,29 @@ if (Meteor.isClient) {
   Meteor.loginWithGithub();
 
   Meteor.startup(function () {
-    // Use Meteor.startup to render the component after the page is ready
     ReactDOM.render(<App />, document.getElementById("render-target"));
   });
 }
 
-// if (Meteor.isClient) {
-//   Session.setDefault('counter', 0);
-//
-//   Template.hello.helpers({
-//     counter: function () {
-//       return Session.get('counter');
-//     }
-//   });
-//
-//   Template.hello.events({
-//     'click button': function () {
-//       // increment the counter when button is clicked
-//       Session.set('counter', Session.get('counter') + 1);
-//     }
-//   });
-// }
-//
-// if (Meteor.isServer) {
-//   Meteor.startup(function () {
-//     // code to run on server at startup
-//   });
-// }
+Meteor.methods({
+  addTask(text) {
+    if (! Meteor.userId()) {
+      throw new Meteor.Error("not-authorized");
+    }
+
+    Tasks.insert({
+      text: text,
+      createdAt: new Date(),
+      owner: Meteor.userId(),
+      username: Meteor.user().username
+    });
+  },
+
+  removeTask(taskId) {
+    Tasks.remove(taskId);
+  },
+
+  setChecked(taskId, setChecked) {
+    Tasks.update(taskId, { $set: { checked: setChecked} });
+  }
+});
