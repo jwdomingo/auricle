@@ -58,6 +58,7 @@ App = React.createClass({
       <div className="container">
         <header>
           <h1>Auricle</h1>
+          <AccountsUIWrapper />
           <h4>Messages ({this.data.messageCount})</h4>
 
           <label className="hide-completed">
@@ -69,7 +70,6 @@ App = React.createClass({
             Hide Completed
           </label>
 
-          <AccountsUIWrapper />
 
           { this.data.currentUser ?
             <form className="new-message" onSubmit={this.handleSubmit} >
@@ -90,7 +90,7 @@ App = React.createClass({
           </ul>
         </aside>
         <main>
-          <ul>
+          <ul className="collection">
             {this.renderMessages()}
           </ul>
         </main>
