@@ -18,7 +18,6 @@ Meteor.methods({
     if (! Meteor.userId()) {
       throw new Meteor.Error("not-authorized");
     }
-
     Tasks.insert({
       text: text,
       createdAt: new Date(),
@@ -28,10 +27,16 @@ Meteor.methods({
   },
 
   removeTask(taskId) {
+    if (! Meteor.userId()) {
+      throw new Meteor.Error("not-authorized");
+    }
     Tasks.remove(taskId);
   },
 
   setChecked(taskId, setChecked) {
+    if (! Meteor.userId()) {
+      throw new Meteor.Error("not-authorized");
+    }
     Tasks.update(taskId, { $set: { checked: setChecked} });
   }
 });
