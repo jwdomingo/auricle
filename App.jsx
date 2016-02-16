@@ -10,7 +10,6 @@ App = React.createClass({
     }
   },
 
-  // Loads items from the Tasks collection and puts them on this.data.tasks
   getMeteorData() {
     let query = {};
 

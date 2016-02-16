@@ -8,8 +8,16 @@ if (Meteor.isClient) {
 
   Meteor.loginWithGithub();
 
+  Meteor.subscribe("tasks");
+
   Meteor.startup(function () {
     ReactDOM.render(<App />, document.getElementById("render-target"));
+  });
+}
+
+if (Meteor.isServer) {
+  Meteor.publish("tasks", function () {
+    return Tasks.find();
   });
 }
 
