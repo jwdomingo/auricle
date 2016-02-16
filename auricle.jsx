@@ -1,11 +1,11 @@
+Messages = new Mongo.Collection("messages");
 Channels = new Mongo.Collection("channels");
 
 if (Meteor.isClient) {
-  Accounts.ui.config({
-    passwordSignupFields: "USERNAME_ONLY"
-  });
-
+  Accounts.ui.config({ passwordSignupFields: "USERNAME_ONLY" });
   Meteor.loginWithGithub();
+
+  Meteor.subscribe("messages");
   Meteor.subscribe("channels");
 
   Meteor.startup(function () {
@@ -14,50 +14,57 @@ if (Meteor.isClient) {
 }
 
 if (Meteor.isServer) {
-  Meteor.publish("channels", function () {
-    return Channels.find({
+  Meteor.publish("messages", function () {
+    return Messages.find({
       $or: [
         { private: {$ne: true} },
         { owner: this.userId }
       ]
     });
   });
+
+  Meteor.publish("channels", function () {
+    return Channels.find({
+      owner: this.userId
+    });
+  });
 }
 
 Meteor.methods({
-  addTask(text) {
+  addMessage(text, channel) {
     if (! Meteor.userId()) {
       throw new Meteor.Error("not-authorized");
     }
-    Channels.insert({
-      text: text,
+    Messages.insert({
+      message: text,
       createdAt: new Date(),
       owner: Meteor.userId(),
-      username: Meteor.user().username
+      username: Meteor.user().username,
+      channel: channel
     });
   },
 
-  removeTask(taskId) {
-    const task = Channels.findOne(taskId);
-    if (task.owner !== Meteor.userId()) {
+  removeMessage(msgId) {
+    const message = Messages.findOne(msgId);
+    if (message.owner !== Meteor.userId()) {
       throw new Meteor.Error("not-authorized");
     }
-    Channels.remove(taskId);
+    Messages.remove(msgId);
   },
 
-  setChecked(taskId, setChecked) {
-    const task = Channels.findOne(taskId);
-    if (task.owner !== Meteor.userId()) {
-      throw new Meteor.Error("not-authorized");
+  setChecked(msgId, setChecked) {
+    const message = Messages.findOne(msgId);
+    if (message.owner !== Meteor.userId()) {
+      throw new Meteor.Error("Not authorized to check off message");
     }
-    Channels.update(taskId, { $set: { checked: setChecked} });
+    Messages.update(msgId, { $set: { checked: setChecked} });
   },
 
-  setPrivate(taskId, setToPrivate) {
-    const task = Channels.findOne(taskId);
-    if (task.owner !== Meteor.userId()) {
-      throw new Meteor.Error("not-authorized");
+  setPrivate(msgId, setToPrivate) {
+    const message = Messages.findOne(msgId);
+    if (message.owner !== Meteor.userId()) {
+      throw new Meteor.Error("Not authorized to set message to privates");
     }
-    Channels.update(taskId, { $set: { private: setToPrivate } });
+    Messages.update(msgId, { $set: { private: setToPrivate } });
   }
 });

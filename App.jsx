@@ -1,7 +1,4 @@
-// App component - represents the whole app
 App = React.createClass({
-
-  // This mixin makes the getMeteorData method work
   mixins: [ReactMeteorData],
 
   getInitialState() {
@@ -14,18 +11,17 @@ App = React.createClass({
     let query = {};
 
     if (this.state.hideCompleted) {
-      // If hide completed is checked, filter tasks
       query = {checked: {$ne: true}};
     }
 
     return {
-      tasks: Tasks.find(query, {sort: {createdAt: -1}}).fetch(),
-      incompleteCount: Tasks.find({checked: {$ne: true}}).count(),
+      messages: Channels.find(query, {sort: {createdAt: -1}}).fetch(),
+      incompleteCount: Channels.find({checked: {$ne: true}}).count(),
       currentUser: Meteor.user()
     };
   },
 
-  renderTasks() {
+  renderChannels() {
     return this.data.tasks.map((task) => {
       const currentUserId = this.data.currentUser && this.data.currentUser._id;
       const showPrivateButton = task.owner === currentUserId;
@@ -81,7 +77,7 @@ App = React.createClass({
         </header>
 
         <ul>
-          {this.renderTasks()}
+          {this.renderChannels()}
         </ul>
       </div>
     );
