@@ -23,7 +23,7 @@ Message = React.createClass({
     return (
       <li className={msgClass}>
         { this.props.message.owner === Meteor.userId() ? (
-          <button className="delete" onClick={this.deleteMessage}>
+          <button className="right" onClick={this.deleteMessage}>
           &times;
           </button>
         ) : '' }
@@ -31,13 +31,14 @@ Message = React.createClass({
         { this.props.message.owner === Meteor.userId() ? (
           <input
             type="checkbox"
+            className="right"
             readOnly={true}
             checked={this.props.message.checked}
             onClick={this.toggleChecked} />
           ) : '' }
 
           { this.props.showPrivateButton ? (
-            <button className="toggle-private" onClick={this.togglePrivate}>
+            <button className="right" onClick={this.togglePrivate}>
               { this.props.message.private ? "Private" : "Public" }
             </button>
           ) : '' }
