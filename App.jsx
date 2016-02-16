@@ -23,8 +23,6 @@ App = React.createClass({
 
   renderMessages() {
     return this.data.messages.map((message) => {
-      console.log('this.data.currentUser',this.data.currentUser);
-      console.log('this.data.currentUser._id',this.data.currentUser._id);
       const currentUserId = this.data.currentUser && this.data.currentUser._id;
       const showPrivateButton = message.owner === currentUserId;
 

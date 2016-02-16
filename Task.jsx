@@ -9,7 +9,7 @@ Message = React.createClass({
   },
 
   deleteMessage() {
-    Meteor.call("removeTask", this.props.message._id);
+    Meteor.call("removeMessage", this.props.message._id);
   },
 
   togglePrivate() {
