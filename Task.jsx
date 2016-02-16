@@ -23,15 +23,19 @@ Task = React.createClass({
 
     return (
       <li className={taskClassName}>
-        <button className="delete" onClick={this.deleteThisTask}>
+        { this.props.task.owner === Meteor.userId() ? (
+          <button className="delete" onClick={this.deleteThisTask}>
           &times;
-        </button>
+          </button>
+        ) : '' }
 
-        <input
-          type="checkbox"
-          readOnly={true}
-          checked={this.props.task.checked}
-          onClick={this.toggleChecked} />
+        { this.props.task.owner === Meteor.userId() ? (
+          <input
+            type="checkbox"
+            readOnly={true}
+            checked={this.props.task.checked}
+            onClick={this.toggleChecked} />
+          ) : '' }
 
           { this.props.showPrivateButton ? (
             <button className="toggle-private" onClick={this.togglePrivate}>
