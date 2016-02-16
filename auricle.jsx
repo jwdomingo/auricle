@@ -1,14 +1,12 @@
-Tasks = new Mongo.Collection("tasks");
+Channels = new Mongo.Collection("channels");
 
 if (Meteor.isClient) {
-  // This code is executed on the client only
   Accounts.ui.config({
     passwordSignupFields: "USERNAME_ONLY"
   });
 
   Meteor.loginWithGithub();
-
-  Meteor.subscribe("tasks");
+  Meteor.subscribe("channels");
 
   Meteor.startup(function () {
     ReactDOM.render(<App />, document.getElementById("render-target"));
@@ -16,8 +14,8 @@ if (Meteor.isClient) {
 }
 
 if (Meteor.isServer) {
-  Meteor.publish("tasks", function () {
-    return Tasks.find({
+  Meteor.publish("channels", function () {
+    return Channels.find({
       $or: [
         { private: {$ne: true} },
         { owner: this.userId }
@@ -31,7 +29,7 @@ Meteor.methods({
     if (! Meteor.userId()) {
       throw new Meteor.Error("not-authorized");
     }
-    Tasks.insert({
+    Channels.insert({
       text: text,
       createdAt: new Date(),
       owner: Meteor.userId(),
@@ -40,30 +38,26 @@ Meteor.methods({
   },
 
   removeTask(taskId) {
-    const task = Tasks.findOne(taskId);
+    const task = Channels.findOne(taskId);
     if (task.owner !== Meteor.userId()) {
       throw new Meteor.Error("not-authorized");
-    } else {
-      Tasks.remove(taskId);
     }
+    Channels.remove(taskId);
   },
 
   setChecked(taskId, setChecked) {
-    const task = Tasks.findOne(taskId);
+    const task = Channels.findOne(taskId);
     if (task.owner !== Meteor.userId()) {
       throw new Meteor.Error("not-authorized");
-    } else {
-      Tasks.update(taskId, { $set: { checked: setChecked} });
     }
+    Channels.update(taskId, { $set: { checked: setChecked} });
   },
 
   setPrivate(taskId, setToPrivate) {
-    const task = Tasks.findOne(taskId);
-
+    const task = Channels.findOne(taskId);
     if (task.owner !== Meteor.userId()) {
       throw new Meteor.Error("not-authorized");
     }
-
-    Tasks.update(taskId, { $set: { private: setToPrivate } });
+    Channels.update(taskId, { $set: { private: setToPrivate } });
   }
 });
