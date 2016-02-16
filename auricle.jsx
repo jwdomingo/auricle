@@ -40,14 +40,16 @@ Meteor.methods({
   },
 
   removeTask(taskId) {
-    if (! Meteor.userId()) {
+    const task = Tasks.findOne(taskId);
+    if (task.private && task.owner !== Meteor.userId()) {
       throw new Meteor.Error("not-authorized");
     }
     Tasks.remove(taskId);
   },
 
   setChecked(taskId, setChecked) {
-    if (! Meteor.userId()) {
+    const task = Tasks.findOne(taskId);
+    if (task.private && task.owner !== Meteor.userId()) {
       throw new Meteor.Error("not-authorized");
     }
     Tasks.update(taskId, { $set: { checked: setChecked} });
