@@ -49,11 +49,16 @@ App = React.createClass({
     });
   },
 
+  sideNav() {
+    $(".button-collapse").sideNav();
+  },
+
   render() {
     return (
       <div className="container">
         <header>
-          <h1>Messages ({this.data.messageCount})</h1>
+          <h1>Auricle</h1>
+          <h4>Messages ({this.data.messageCount})</h4>
 
           <label className="hide-completed">
             <input
@@ -76,9 +81,19 @@ App = React.createClass({
           }
         </header>
 
-        <ul>
-          {this.renderMessages()}
-        </ul>
+        <aside className="hide-on-small-only">
+          <ul id="slide-out" className="side-nav fixed">
+            <li><h4>Channels</h4></li>
+            <li className="teal"><input/></li>
+            <li><a href="#">Channel 1</a></li>
+            <li><a href="#">Channel 2</a></li>
+          </ul>
+        </aside>
+        <main>
+          <ul>
+            {this.renderMessages()}
+          </ul>
+        </main>
       </div>
     );
   }
