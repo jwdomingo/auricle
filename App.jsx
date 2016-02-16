@@ -15,6 +15,7 @@ App = React.createClass({
     }
 
     return {
+      channels: Channels.find({}).fetch(),
       messages: Messages.find(query, {sort: {createdAt: -1}}).fetch(),
       messageCount: Messages.find({checked: {$ne: true}}).count(),
       currentUser: Meteor.user()
@@ -31,6 +32,27 @@ App = React.createClass({
         message={message}
         showPrivateButton={showPrivateButton} />;
     });
+  },
+
+  renderChannel() {
+    if (!this.data.channels) {
+      console.log('NO CHANNELS YET', this.data.channels);
+      return;
+    }
+    return this.data.channels.map((content) => {
+      return <Media
+        key={content._id}
+        channel={channels.channel} />;
+    });
+  },
+
+  getMedia() {
+    Meteor.call("getMedia", function(error, response) {
+      if (error) {
+        //console.error('Client side error');
+      }
+      Session.set('media', response);
+    })
   },
 
   handleSubmit(event) {
@@ -57,8 +79,13 @@ App = React.createClass({
     return (
       <div className="container">
         <header>
-          <h1>Auricle</h1>
+          <a href="#" onClick={this.getMedia}><h1>Auricle</h1></a>
           <AccountsUIWrapper />
+
+          <div id="channel">
+            {this.renderChannel()}
+          </div>
+
           <h4>Messages ({this.data.messageCount})</h4>
 
           <label className="hide-completed">
