@@ -1,50 +1,49 @@
-// Task component - represents a single todo item
-Task = React.createClass({
+Message = React.createClass({
   propTypes: {
-    task: React.PropTypes.object.isRequired,
+    message: React.PropTypes.object.isRequired,
     showPrivateButton: React.PropTypes.bool.isRequired
   },
 
   toggleChecked() {
-    Meteor.call("setChecked", this.props.task._id, !this.props.task.checked);
+    Meteor.call("setChecked", this.props.message._id, !this.props.message.checked);
   },
 
-  deleteThisTask() {
-    Meteor.call("removeTask", this.props.task._id);
+  deleteMessage() {
+    Meteor.call("removeTask", this.props.message._id);
   },
 
   togglePrivate() {
-    Meteor.call("setPrivate", this.props.task._id, ! this.props.task.private);
+    Meteor.call("setPrivate", this.props.message._id, ! this.props.message.private);
   },
 
   render() {
-    const taskClassName = (this.props.task.checked ? "checked" : "") + " " +
-      (this.props.task.private ? "private" : "");
+    const msgClass = (this.props.message.checked ? "checked" : "") + " " +
+      (this.props.message.private ? "private" : "");
 
     return (
-      <li className={taskClassName}>
-        { this.props.task.owner === Meteor.userId() ? (
-          <button className="delete" onClick={this.deleteThisTask}>
+      <li className={msgClass}>
+        { this.props.message.owner === Meteor.userId() ? (
+          <button className="delete" onClick={this.deleteMessage}>
           &times;
           </button>
         ) : '' }
 
-        { this.props.task.owner === Meteor.userId() ? (
+        { this.props.message.owner === Meteor.userId() ? (
           <input
             type="checkbox"
             readOnly={true}
-            checked={this.props.task.checked}
+            checked={this.props.message.checked}
             onClick={this.toggleChecked} />
           ) : '' }
 
           { this.props.showPrivateButton ? (
             <button className="toggle-private" onClick={this.togglePrivate}>
-              { this.props.task.private ? "Private" : "Public" }
+              { this.props.message.private ? "Private" : "Public" }
             </button>
           ) : '' }
 
           <span className="text">
-            <strong>{this.props.task.username}</strong>: {this.props.task.text}
+            <strong>{this.props.message.username}</strong>: {this.props.message.content}
           </span>
       </li>
     )

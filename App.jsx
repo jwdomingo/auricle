@@ -28,9 +28,9 @@ App = React.createClass({
       const currentUserId = this.data.currentUser && this.data.currentUser._id;
       const showPrivateButton = message.owner === currentUserId;
 
-      return <Task
+      return <Message
         key={message._id}
-        task={message}
+        message={message}
         showPrivateButton={showPrivateButton} />;
     });
   },

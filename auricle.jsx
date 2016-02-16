@@ -36,7 +36,7 @@ Meteor.methods({
       throw new Meteor.Error("not-authorized");
     }
     Messages.insert({
-      message: text,
+      content: text,
       createdAt: new Date(),
       owner: Meteor.userId(),
       username: Meteor.user().username,
